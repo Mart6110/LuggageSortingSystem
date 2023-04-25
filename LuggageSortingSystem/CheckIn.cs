@@ -97,7 +97,7 @@ namespace LuggageSortingSystem
                             }
 
                             totalCount++; // Count up the total check ins
-                            Luggage luggage = new Luggage(destination); // creating a new object of the
+                            Luggage luggage = new Luggage(destination); // creating a new object of the Luggage class
                             Airport.luggageSorting.Enqueue(luggage);
 
                             Thread.Sleep(TimeSpan.FromSeconds(1));
