@@ -45,23 +45,23 @@ namespace LuggageSortingSystem
         {
             while (true)
             {
-                Monitor.Enter(Program.londonLuggage);
-                Monitor.Enter(Program.newYourkLuggage);
-                Monitor.Enter(Program.berlinLuggage);
+                Monitor.Enter(Airport.londonLuggage);
+                Monitor.Enter(Airport.newYourkLuggage);
+                Monitor.Enter(Airport.berlinLuggage);
                 try
                 {
                     // TryDequeue tries to remove the object from the beginning of the concurrent queue, it returns true if the object was removed else it return false.
-                    Program.londonLuggage.TryDequeue(out Luggage londonLuggage);
-                    Program.newYourkLuggage.TryDequeue(out Luggage newYourkLuggage);
-                    Program.berlinLuggage.TryDequeue(out Luggage berlinLuggage);
+                    Airport.londonLuggage.TryDequeue(out Luggage londonLuggage);
+                    Airport.newYourkLuggage.TryDequeue(out Luggage newYourkLuggage);
+                    Airport.berlinLuggage.TryDequeue(out Luggage berlinLuggage);
                     Thread.Sleep(TimeSpan.FromSeconds(1));
                 }
                 finally
                 {
                     // Exit the objects.
-                    Monitor.Exit(Program.londonLuggage);
-                    Monitor.Exit(Program.newYourkLuggage);
-                    Monitor.Exit(Program.berlinLuggage);
+                    Monitor.Exit(Airport.londonLuggage);
+                    Monitor.Exit(Airport.newYourkLuggage);
+                    Monitor.Exit(Airport.berlinLuggage);
                 }
             }
         }

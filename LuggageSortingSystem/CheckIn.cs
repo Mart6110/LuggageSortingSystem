@@ -66,13 +66,13 @@ namespace LuggageSortingSystem
             string destination = "";
             while (true)
             {
-                Monitor.Enter(Program.luggageSorting);
+                Monitor.Enter(Airport.luggageSorting);
 
                 // A try that has an if statement inside it.
                 try
                 {
                     // If the queue is eqaul to 0. We run a for loop that loops 10 times.
-                    if(Program.luggageSorting.Count == 0)
+                    if(Airport.luggageSorting.Count == 0)
                     {
                         for(int i = 0; i < 10; i++)
                         {
@@ -98,16 +98,16 @@ namespace LuggageSortingSystem
 
                             totalCount++; // Count up the total check ins
                             Luggage luggage = new Luggage(destination); // creating a new object of the
-                            Program.luggageSorting.Enqueue(luggage);
+                            Airport.luggageSorting.Enqueue(luggage);
 
                             Thread.Sleep(TimeSpan.FromSeconds(1));
                         }
                     }
-                    Monitor.PulseAll(Program.luggageSorting); // Pulse to all threads, giving the threads the info that the object is not locked.
+                    Monitor.PulseAll(Airport.luggageSorting); // Pulse to all threads, giving the threads the info that the object is not locked.
                 }
                 finally
                 {
-                    Monitor.Exit(Program.luggageSorting); // Exit the object.
+                    Monitor.Exit(Airport.luggageSorting); // Exit the object.
                 }
             }
         }

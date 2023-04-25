@@ -47,22 +47,22 @@ namespace LuggageSortingSystem
         {
             while (true)
             {
-                Monitor.Enter(Program.luggageSorting);
-                Monitor.Enter(Program.londonLuggage);
-                Monitor.Enter(Program.newYourkLuggage);
-                Monitor.Enter(Program.berlinLuggage);
+                Monitor.Enter(Airport.luggageSorting);
+                Monitor.Enter(Airport.londonLuggage);
+                Monitor.Enter(Airport.newYourkLuggage);
+                Monitor.Enter(Airport.berlinLuggage);
 
                 // A try that has a while and a foreach inside it.
                 try
                 {
                     // While luggageSorting count is eqaul 0, we wait for luggageSorting to be free.
-                    while (Program.luggageSorting.Count == 0)
+                    while (Airport.luggageSorting.Count == 0)
                     {
-                        Monitor.Wait(Program.luggageSorting);
+                        Monitor.Wait(Airport.luggageSorting);
                     }
 
                     // A foreach that loops through the luggageSorting queue.
-                    foreach(Luggage luggage in Program.luggageSorting)
+                    foreach(Luggage luggage in Airport.luggageSorting)
                     {
                         string destination = luggage.Destination;
 
@@ -83,21 +83,21 @@ namespace LuggageSortingSystem
                         sortingCount++;
                         Thread.Sleep(TimeSpan.FromSeconds(1));
                     }
-                    Program.luggageSorting.Clear(); // Clearing the queue.
+                    Airport.luggageSorting.Clear(); // Clearing the queue.
 
                     // Pulse to all threads, giving the threads the info that the object is not locked.
-                    Monitor.PulseAll(Program.luggageSorting);
-                    Monitor.PulseAll(Program.londonLuggage);
-                    Monitor.PulseAll(Program.newYourkLuggage);
-                    Monitor.PulseAll(Program.berlinLuggage);
+                    Monitor.PulseAll(Airport.luggageSorting);
+                    Monitor.PulseAll(Airport.londonLuggage);
+                    Monitor.PulseAll(Airport.newYourkLuggage);
+                    Monitor.PulseAll(Airport.berlinLuggage);
                 }
                 finally
                 {
                     // Exit the objects.
-                    Monitor.Exit(Program.luggageSorting);
-                    Monitor.Exit(Program.londonLuggage);
-                    Monitor.Exit(Program.newYourkLuggage);
-                    Monitor.Exit(Program.berlinLuggage);
+                    Monitor.Exit(Airport.luggageSorting);
+                    Monitor.Exit(Airport.londonLuggage);
+                    Monitor.Exit(Airport.newYourkLuggage);
+                    Monitor.Exit(Airport.berlinLuggage);
                 }
             }
         }

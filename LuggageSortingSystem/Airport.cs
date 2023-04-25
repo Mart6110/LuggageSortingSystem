@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace LuggageSortingSystem
 {
-    class Program
+    class Airport
     {
         // Creating Concurrent queues.
         public static ConcurrentQueue<Luggage> luggageSorting = new ConcurrentQueue<Luggage>();
