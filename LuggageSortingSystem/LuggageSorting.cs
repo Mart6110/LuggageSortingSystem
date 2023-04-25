@@ -9,23 +9,40 @@ namespace LuggageSortingSystem
 {
     class LuggageSorting
     {
-        private static int sortingCount;
-        private static bool sortingBool;
+        private int sortingCount;
+        private bool sortingBool;
+        private Thread sortingLuggage;
+        private CancellationTokenSource source;
 
-        public static int SortingCount
+        public int SortingCount
         {
             get { return sortingCount; }
         }
-        public static bool SortingBool
+        public bool SortingBool
         {
             get { return sortingBool; }
         }
-
-        public LuggageSorting()
+        public Thread GetThread
         {
-            Thread sortingLuggage = new Thread(new ThreadStart(Sorting));
+            get { return sortingLuggage; }
+        }
+        public CancellationTokenSource Source
+        {
+            get { return source; }
+        }
+
+        public LuggageSorting(CancellationTokenSource source)
+        {
+            this.source = source;
+
+            sortingLuggage = new Thread(new ThreadStart(Sorting));
+            sortingLuggage.Name = "Sorting thread";
 
             sortingLuggage.Start();
+        }
+        public void CloseSortingThreads()
+        {
+            Source.Cancel();
         }
         public void Sorting()
         {

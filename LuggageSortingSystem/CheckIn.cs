@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,35 +12,55 @@ namespace LuggageSortingSystem
     {
         public Random rnd = new Random();
 
+        // Feilds
         private static int totalCount;
         private static int londonCount;
         private static int newYourkCount;
         private static int berlinCount;
+        private Thread checkIns;
+        private CancellationTokenSource source;
 
-        public static int TotalCount
+        // Properies
+        public int TotalCount
         {
             get { return totalCount; }
         }
-        public static int LondonCount
+        public int LondonCount
         {
             get { return londonCount; }
         }
-        public static int NewYorkCount
+        public int NewYorkCount
         {
             get { return newYourkCount; }
         }
-        public static int BerlinCount
+        public int BerlinCount
         {
             get { return berlinCount; }
         }
-
-        public CheckIn()
+        public Thread GetThread
         {
-            Thread checkIns = new Thread(new ThreadStart(LuggageCheckIn));
-
-            checkIns.Start();
+            get { return checkIns; }
+        }
+        public CancellationTokenSource Source
+        {
+            get { return source; }
         }
 
+        // Constructor, The constructor has a parameter CancellationTokenSource
+        public CheckIn(CancellationTokenSource source)
+        {
+            this.source = source;
+
+            // creating a new Thread that when we start the thread it calls the LuggageCheckIn method.
+            checkIns = new Thread(new ThreadStart(LuggageCheckIn));
+            checkIns.Name = "Check in thread"; // Giving the thread a name.
+
+            checkIns.Start(); // Starting the thread
+        }
+        public void CloseCheckInThreads()
+        {
+            Source.Cancel(); // Cancelling the thread.
+        }
         public void LuggageCheckIn()
         {
             string destination = "";

@@ -10,11 +10,30 @@ namespace LuggageSortingSystem
 {
     class Terminal
     {
-        public Terminal()
-        {
-            Thread londonTerminal = new Thread(new ThreadStart(LuggageTerminal));
+        private Thread terminal;
+        private CancellationTokenSource source;
 
-            londonTerminal.Start();
+        public Thread GetThread
+        {
+            get { return terminal; }
+        }
+        public CancellationTokenSource Source
+        {
+            get { return source; }
+        }
+
+        public Terminal(CancellationTokenSource source)
+        {
+            this.source = source;
+
+            terminal = new Thread(new ThreadStart(LuggageTerminal));
+            terminal.Name = "Terminal thread";
+
+            terminal.Start();
+        }
+        public void CloseTerminalThreads()
+        {
+            Source.Cancel();
         }
         public void LuggageTerminal()
         {

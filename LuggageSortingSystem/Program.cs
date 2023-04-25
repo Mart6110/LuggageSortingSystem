@@ -8,20 +8,30 @@ namespace LuggageSortingSystem
 {
     class Program
     {
+        // Creating Concurrent queues.
         public static ConcurrentQueue<Luggage> luggageSorting = new ConcurrentQueue<Luggage>();
         public static ConcurrentQueue<Luggage> londonLuggage = new ConcurrentQueue<Luggage>();
         public static ConcurrentQueue<Luggage> newYourkLuggage = new ConcurrentQueue<Luggage>();
         public static ConcurrentQueue<Luggage> berlinLuggage = new ConcurrentQueue<Luggage>();
 
+        private static CheckIn checkIn;
+        private static Terminal terminal;
+        private static LuggageSorting sortingLuggage;
+
+
         static void Main(string[] args)
         {
+            CancellationTokenSource source = new CancellationTokenSource();
+
+            // Running a for loop that loops 3 times and and create objects of the classes CheckIn and Terminal.
             for (int i = 0; i < 3; i++)
             {
-                CheckIn checkIn = new CheckIn();
-                Terminal terminal = new Terminal();
+                checkIn = new CheckIn(source);
+                terminal = new Terminal(source);
             }
 
-            LuggageSorting luggageSorting = new LuggageSorting();
+            // Creating a object of the class Luggage.
+            sortingLuggage = new LuggageSorting(source);
 
             do
             {
@@ -29,27 +39,19 @@ namespace LuggageSortingSystem
                 Console.WriteLine("-------------------- Check in numbers: ---------------------");
                 Console.WriteLine();
                 Console.WriteLine("------------------------------------------------------------");
-                Console.WriteLine("Total Luggage Checked in: " + CheckIn.TotalCount);
+                Console.WriteLine("Total Luggage Checked in: " + checkIn.TotalCount);
                 Console.WriteLine("------------------------------------------------------------");
-                Console.WriteLine("Luggage checked in to London: " + CheckIn.LondonCount);
+                Console.WriteLine("Luggage checked in to London: " + checkIn.LondonCount);
                 Console.WriteLine("------------------------------------------------------------");
-                Console.WriteLine("Luggage checked in to New York: " + CheckIn.NewYorkCount);
+                Console.WriteLine("Luggage checked in to New York: " + checkIn.NewYorkCount);
                 Console.WriteLine("------------------------------------------------------------");
-                Console.WriteLine("Luggage checked in: Berlin: " + CheckIn.BerlinCount);
+                Console.WriteLine("Luggage checked in: Berlin: " + checkIn.BerlinCount);
                 Console.WriteLine("------------------------------------------------------------");
                 Console.WriteLine();
                 Console.WriteLine("--------------------- Sorting numbers: ---------------------");
                 Console.WriteLine();
-                Console.WriteLine("Luggage sorted: " + LuggageSorting.SortingCount);
                 Console.WriteLine("------------------------------------------------------------");
-                if (!LuggageSorting.SortingBool)
-                {
-                    Console.WriteLine("Waiting for luggage.");
-                }
-                else
-                {
-                    Console.WriteLine("Sorting luggage.");
-                }
+                Console.WriteLine("Luggage sorted: " + sortingLuggage.SortingCount);
                 Console.WriteLine("------------------------------------------------------------");
                 Console.WriteLine("London Luggage: " + londonLuggage.Count);
                 Console.WriteLine("------------------------------------------------------------");
@@ -61,13 +63,19 @@ namespace LuggageSortingSystem
                 Console.WriteLine("------------------------------------------------------------");
 
                 Thread.Sleep(TimeSpan.FromSeconds(1));
-            } while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape));
+            } 
+            // The Do/While will keep looping intil the Escape button is pressed.
+            while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape));
 
-            CheckIn
-            londonTerminal.Join();
-            newYorkTerminal.Join();
-            berlinTerminal.Join();
-            Console.WriteLine("Threads has been closed");
+            // Calling methods to close threads
+            checkIn.CloseCheckInThreads();
+            Console.WriteLine(checkIn.GetThread.Name + " Status: " + checkIn.GetThread.ThreadState);
+            Console.WriteLine("------------------------------------------------------------");
+            sortingLuggage.CloseSortingThreads();
+            Console.WriteLine(sortingLuggage.GetThread.Name + " Status: " + sortingLuggage.GetThread.ThreadState);
+            Console.WriteLine("------------------------------------------------------------");
+            terminal.CloseTerminalThreads();
+            Console.WriteLine(sortingLuggage.GetThread.Name + " Status: " + sortingLuggage.GetThread.ThreadState);
             Console.WriteLine("------------------------------------------------------------");
         }
     }
