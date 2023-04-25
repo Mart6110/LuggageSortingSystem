@@ -9,18 +9,15 @@ namespace LuggageSortingSystem
 {
     class LuggageSorting
     {
+        // Feilds
         private int sortingCount;
-        private bool sortingBool;
         private Thread sortingLuggage;
         private CancellationTokenSource source;
 
+        // Properies
         public int SortingCount
         {
             get { return sortingCount; }
-        }
-        public bool SortingBool
-        {
-            get { return sortingBool; }
         }
         public Thread GetThread
         {
@@ -31,18 +28,20 @@ namespace LuggageSortingSystem
             get { return source; }
         }
 
+        // Constructor, The constructor has a parameter CancellationTokenSource
         public LuggageSorting(CancellationTokenSource source)
         {
             this.source = source;
 
+            // creating a new Thread that when we start the thread it calls the Sorting method.
             sortingLuggage = new Thread(new ThreadStart(Sorting));
             sortingLuggage.Name = "Sorting thread";
 
-            sortingLuggage.Start();
+            sortingLuggage.Start();  // Starting the thread.
         }
         public void CloseSortingThreads()
         {
-            Source.Cancel();
+            Source.Cancel(); // Cancelling the thread.
         }
         public void Sorting()
         {
@@ -52,20 +51,22 @@ namespace LuggageSortingSystem
                 Monitor.Enter(Program.londonLuggage);
                 Monitor.Enter(Program.newYourkLuggage);
                 Monitor.Enter(Program.berlinLuggage);
+
+                // A try that has a while and a foreach inside it.
                 try
                 {
-                    while(Program.luggageSorting.Count == 0)
+                    // While luggageSorting count is eqaul 0, we wait for luggageSorting to be free.
+                    while (Program.luggageSorting.Count == 0)
                     {
                         Monitor.Wait(Program.luggageSorting);
-                        sortingBool = false;
                     }
 
+                    // A foreach that loops through the luggageSorting queue.
                     foreach(Luggage luggage in Program.luggageSorting)
                     {
                         string destination = luggage.Destination;
-                        sortingBool = true;
 
-                        switch (destination)
+                        switch (destination) // A switch that sort the luggage to the different destination queue
                         {
                             case "London":
                                 Program.londonLuggage.Enqueue(luggage);
@@ -82,7 +83,9 @@ namespace LuggageSortingSystem
                         sortingCount++;
                         Thread.Sleep(TimeSpan.FromSeconds(1));
                     }
-                    Program.luggageSorting.Clear();
+                    Program.luggageSorting.Clear(); // Clearing the queue.
+
+                    // Pulse to all threads, giving the threads the info that the object is not locked.
                     Monitor.PulseAll(Program.luggageSorting);
                     Monitor.PulseAll(Program.londonLuggage);
                     Monitor.PulseAll(Program.newYourkLuggage);
@@ -90,6 +93,7 @@ namespace LuggageSortingSystem
                 }
                 finally
                 {
+                    // Exit the objects.
                     Monitor.Exit(Program.luggageSorting);
                     Monitor.Exit(Program.londonLuggage);
                     Monitor.Exit(Program.newYourkLuggage);

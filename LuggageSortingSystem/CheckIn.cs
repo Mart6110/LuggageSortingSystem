@@ -55,7 +55,7 @@ namespace LuggageSortingSystem
             checkIns = new Thread(new ThreadStart(LuggageCheckIn));
             checkIns.Name = "Check in thread"; // Giving the thread a name.
 
-            checkIns.Start(); // Starting the thread
+            checkIns.Start(); // Starting the thread.
         }
         public void CloseCheckInThreads()
         {
@@ -67,15 +67,18 @@ namespace LuggageSortingSystem
             while (true)
             {
                 Monitor.Enter(Program.luggageSorting);
+
+                // A try that has an if statement inside it.
                 try
                 {
+                    // If the queue is eqaul to 0. We run a for loop that loops 10 times.
                     if(Program.luggageSorting.Count == 0)
                     {
                         for(int i = 0; i < 10; i++)
                         {
-                            int destinationNumber = rnd.Next(1, 4);
+                            int destinationNumber = rnd.Next(1, 4); // Generating a random number between 1 and 3.
 
-                            switch (destinationNumber)
+                            switch (destinationNumber) // A Switch that sets the destination.
                             {
                                 case 1:
                                     londonCount++;
@@ -93,18 +96,18 @@ namespace LuggageSortingSystem
                                     break;
                             }
 
-                            totalCount++;
-                            Luggage luggage = new Luggage(destination);
+                            totalCount++; // Count up the total check ins
+                            Luggage luggage = new Luggage(destination); // creating a new object of the
                             Program.luggageSorting.Enqueue(luggage);
 
                             Thread.Sleep(TimeSpan.FromSeconds(1));
                         }
                     }
-                    Monitor.PulseAll(Program.luggageSorting);
+                    Monitor.PulseAll(Program.luggageSorting); // Pulse to all threads, giving the threads the info that the object is not locked.
                 }
                 finally
                 {
-                    Monitor.Exit(Program.luggageSorting);
+                    Monitor.Exit(Program.luggageSorting); // Exit the object.
                 }
             }
         }

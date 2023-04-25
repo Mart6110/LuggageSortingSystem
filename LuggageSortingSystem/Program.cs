@@ -68,6 +68,7 @@ namespace LuggageSortingSystem
             while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape));
 
             // Calling methods to close threads
+            Console.Clear();
             checkIn.CloseCheckInThreads();
             Console.WriteLine(checkIn.GetThread.Name + " Status: " + checkIn.GetThread.ThreadState);
             Console.WriteLine("------------------------------------------------------------");
