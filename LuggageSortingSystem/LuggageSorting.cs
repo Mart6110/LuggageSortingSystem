@@ -69,13 +69,13 @@ namespace LuggageSortingSystem
                         switch (destination) // A switch that sort the luggage to the different destination queue
                         {
                             case "London":
-                                Program.londonLuggage.Enqueue(luggage);
+                                Airport.londonLuggage.Enqueue(luggage);
                                 break;
                             case "New York":
-                                Program.newYourkLuggage.Enqueue(luggage);
+                                Airport.newYourkLuggage.Enqueue(luggage);
                                 break;
                             case "Berlin":
-                                Program.berlinLuggage.Enqueue(luggage);
+                                Airport.berlinLuggage.Enqueue(luggage);
                                 break;
                             default:
                                 break;
